@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BÌNH ĐẲNG TRƯỚC PHÁP LUẬT - Premium Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        
+        :root {
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --accent: #f59e0b;
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at top left, #1e1b4b, #312e81, #0f172a);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #f8fafc;
+        }
+
+        .bg-glow {
+            position: fixed;
+            width: 40vw;
+            height: 40vw;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(60px);
+        }
+
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .input-field:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+        }
+
+        .option-card {
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .option-card:hover {
+            transform: scale(1.02) translateX(10px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary);
+        }
+
+        .option-selected {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.2)) !important;
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .timer-glow {
+            text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+        }
+
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .animate-pulse-soft {
+            animation: pulse-soft 2s infinite;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4">
+    <div class="bg-glow top-[-10%] left-[-10%]"></div>
+    <div class="bg-glow bottom-[-10%] right-[-10%]" style="background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, rgba(0,0,0,0) 70%);"></div>
+
+    <div id="app" class="max-w-3xl w-full relative z-10">
+        
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="quiz-card p-8 md:p-12 text-center animate__animated animate__fadeInUp">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-3xl shadow-2xl mb-6 transform rotate-12">
+                <i class="fas fa-balance-scale text-3xl text-white"></i>
+            </div>
+            
+            <h1 class="text-4xl font-extrabold tracking-tight mb-2 text-white uppercase">
+                BÌNH ĐẲNG TRƯỚC <span class="text-indigo-400">PHÁP LUẬT</span>
+            </h1>
+            <p class="text-slate-400 font-medium mb-8 text-sm uppercase tracking-[0.2em]">Kiểm tra Thường xuyên Lần 1 - HK2</p>
+            
+            <!-- Student Information Form -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 text-left">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase ml-2">Họ và Tên</label>
+                    <input type="text" id="student-name" placeholder="Nhập họ tên của bạn..." class="w-full px-5 py-4 rounded-2xl input-field text-white font-medium">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase ml-2">Lớp</label>
+                    <input type="text" id="student-class" placeholder="Ví dụ: 12A1" class="w-full px-5 py-4 rounded-2xl input-field text-white font-medium">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
+                    <div class="text-2xl mb-1">📝</div>
+                    <div class="text-xs font-bold text-slate-300">10 CÂU HỎI</div>
+                </div>
+                <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
+                    <div class="text-2xl mb-1">⏳</div>
+                    <div class="text-xs font-bold text-slate-300">10 PHÚT</div>
+                </div>
+            </div>
+
+            <button onclick="startQuiz()" class="w-full py-5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-bold text-xl shadow-xl shadow-indigo-500/20 transition-all active:scale-95 group">
+                BẮT ĐẦU CHINH PHỤC <i class="fas fa-chevron-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+            </button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden quiz-card p-8 md:p-12 animate__animated animate__fadeIn">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-10">
+                <div class="flex items-center space-x-5">
+                    <div id="icon-container" class="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-3xl shadow-inner border border-white/10">📖</div>
+                    <div>
+                        <p class="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-1">Tiến trình</p>
+                        <h2 class="text-3xl font-black text-white">Câu <span id="current-idx">1</span><span class="text-white/20 text-xl font-medium">/10</span></h2>
+                    </div>
+                </div>
+                
+                <div id="timer-box" class="flex items-center px-8 py-4 bg-slate-900/80 backdrop-blur-md text-white rounded-2xl font-mono text-2xl border border-white/10">
+                    <i class="fas fa-clock mr-3 text-amber-400 animate-pulse"></i>
+                    <span id="timer" class="timer-glow">10:00</span>
+                </div>
+            </div>
+
+            <div class="relative w-full bg-white/5 h-3 rounded-full mb-12 overflow-hidden border border-white/5">
+                <div id="progress" class="progress-bar h-full w-0"></div>
+            </div>
+
+            <div id="question-container" class="min-h-[250px]">
+                <h3 id="question-text" class="text-2xl font-bold text-white leading-snug mb-10"></h3>
+                <div id="options" class="grid grid-cols-1 gap-4"></div>
+            </div>
+
+            <div class="mt-12 flex items-center justify-between">
+                <button id="prev-btn" onclick="goToPrev()" class="px-8 py-4 text-slate-400 font-bold hover:text-white transition-colors opacity-0 pointer-events-none">
+                    <i class="fas fa-arrow-left mr-2"></i> Câu trước
+                </button>
+                <button id="next-btn" onclick="goToNext()" disabled class="px-12 py-5 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg transition-all hover:bg-indigo-500 transform active:scale-95">
+                    TIẾP THEO <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="hidden quiz-card p-12 text-center animate__animated animate__zoomIn">
+            <div class="w-20 h-20 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center text-4xl mx-auto mb-6 shadow-inner border border-emerald-500/20">🏁</div>
+            
+            <h2 class="text-3xl font-black text-white mb-2 tracking-tight">KẾT THÚC BÀI THI</h2>
+            <div class="flex flex-col items-center mb-10">
+                <p id="display-name" class="text-indigo-300 font-bold text-xl"></p>
+                <p id="display-class" class="text-slate-400 font-medium"></p>
+            </div>
+            
+            <div class="relative inline-block mb-10">
+                <svg class="w-48 h-48 transform -rotate-90">
+                    <circle cx="96" cy="96" r="85" stroke="rgba(255,255,255,0.05)" stroke-width="14" fill="transparent"></circle>
+                    <circle id="score-circle" cx="96" cy="96" r="85" stroke="url(#gradient)" stroke-width="14" fill="transparent" stroke-dasharray="534" stroke-dashoffset="534" stroke-linecap="round" class="transition-all duration-1000 ease-out"></circle>
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#6366f1" />
+                            <stop offset="100%" stop-color="#a855f7" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                    <span id="score-val" class="text-6xl font-black text-white">0/10</span>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-widest mt-2">Tổng điểm</span>
+                </div>
+            </div>
+
+            <div id="performance-msg" class="text-xl font-bold text-indigo-200 mb-10 px-6"></div>
+            
+            <div class="p-6 bg-white/5 rounded-3xl border border-white/10 text-slate-400 font-medium">
+                <i class="fas fa-lock mr-2 text-slate-500"></i> Bài thi đã được khóa và ghi nhận vào hệ thống.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            if (type === 'select') {
+                osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.1);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+            } else if (type === 'finish') {
+                [523.25, 659.25, 783.99].forEach((f, i) => {
+                    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+                    o.connect(g); g.connect(audioCtx.destination);
+                    o.frequency.setValueAtTime(f, audioCtx.currentTime + i * 0.1);
+                    g.gain.setValueAtTime(0.05, audioCtx.currentTime + i * 0.1);
+                    g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + i * 0.1 + 0.5);
+                    o.start(audioCtx.currentTime + i * 0.1); o.stop(audioCtx.currentTime + i * 0.1 + 0.5);
+                });
+            }
+        }
+
+        const quizData = [
+            { q: "Theo quy định của pháp luật, công dân bình đẳng về quyền và nghĩa vụ có nghĩa là mọi cá nhân:", icon: "🤝", options: ["được hưởng thụ mọi lợi ích vật chất như nhau.", "đều có quyền và nghĩa vụ giống hệt nhau.", "hưởng quyền và thực hiện nghĩa vụ theo luật định.", "có quyền từ bỏ nghĩa vụ nếu không hưởng quyền."], correct: 2 },
+            { q: "Nội dung nào phản ánh đúng sự bình đẳng của công dân về trách nhiệm pháp lý?", icon: "⚖️", options: ["Người có chức vụ cao không phải chịu trách nhiệm.", "Bất kì công dân nào vi phạm đều bị xử lý theo quy định.", "Người nghèo được miễn toàn bộ trách nhiệm dân sự.", "Trẻ vị thành niên không bao giờ phải chịu trách nhiệm."], correct: 1 },
+            { q: "Việc nhà nước đảm bảo mọi công dân không bị phân biệt đối xử trong hưởng quyền là:", icon: "🌍", options: ["Bình đẳng về nhu cầu cá nhân.", "Bình đẳng trước các chuẩn mực đạo đức.", "Bình đẳng về quyền lợi kinh tế.", "Bình đẳng của công dân trước pháp luật."], correct: 3 },
+            { q: "Mối quan hệ giữa quyền và nghĩa vụ của công dân được quy định như thế nào?", icon: "🔗", options: ["Quyền luôn được ưu tiên thực hiện trước nghĩa vụ.", "Quyền và nghĩa vụ là hai thành tố không tách rời.", "Chỉ thực hiện nghĩa vụ khi quyền lợi được đảm bảo.", "Quyền và nghĩa vụ độc lập hoàn toàn, không liên quan."], correct: 1 },
+            { q: "Khi đi làm CCCD, mọi người từ nông thôn đến thành thị, giàu nghèo đều xếp hàng. Điều này thể hiện:", icon: "🆔", options: ["quyền được phục vụ theo nhu cầu.", "trách nhiệm đóng góp phí dịch vụ.", "quyền và nghĩa vụ trong thủ tục hành chính.", "cơ hội tiếp cận các nguồn lực kinh tế."], correct: 2 },
+            { q: "Công ty X và Y trốn thuế tương đương. Việc xử phạt cả hai theo khung quy định nhằm đảm bảo:", icon: "🏢", options: ["sự công bằng về lợi nhuận kinh doanh.", "tính nghiêm minh của trách nhiệm pháp lý.", "quyền tự do kinh doanh của các doanh nghiệp.", "nghĩa vụ nộp ngân sách theo mong muốn."], correct: 1 },
+            { q: "Bạn M học pháp luật để hướng dẫn các bạn tránh vi phạm. M đang thực hiện trách nhiệm nào?", icon: "📚", options: ["Trách nhiệm học tập và tuyên truyền pháp luật.", "Thay mặt cơ quan nhà nước xử lý vi phạm.", "Giám sát mọi hoạt động của bạn bè trong lớp.", "Can thiệp vào đời sống riêng tư của người khác."], correct: 0 },
+            { q: "Trong bầu cử tổ trưởng, mọi dân từ 18 tuổi đều được phát phiếu bầu. Điều này thể hiện không phân biệt bởi:", icon: "🗳️", options: ["trình độ chuyên môn nghiệp vụ.", "thành phần và địa vị xã hội.", "khả năng đóng góp về kinh tế.", "sức khỏe và sở thích cá nhân."], correct: 1 },
+            { q: "Nhận xét về ý kiến: 'Ưu tiên cộng điểm vùng sâu vùng xa là vi phạm quyền bình đẳng'.", icon: "🏫", options: ["Đúng, vì mọi học sinh phải có điểm chuẩn bằng nhau.", "Sai, vì đây là tạo điều kiện công bằng thực chất.", "Đúng, vì gây thiệt thòi cho học sinh thành phố.", "Sai, vì đây là quyền riêng biệt của Nhà nước."], correct: 1 },
+            { q: "Lập luận: 'Nếu không dùng quyền thì tôi cũng không cần thực hiện nghĩa vụ pháp lý' là:", icon: "❓", options: ["Hợp lý, vì là quan hệ trao đổi vật chất.", "Chưa đúng, vì quyền có thể không dùng nhưng nghĩa vụ là bắt buộc.", "Hoàn toàn đúng, là tự do cá nhân.", "Không chính xác, vì nghĩa vụ chỉ phát sinh khi nhận đủ quyền."], correct: 1 }
+        ];
+
+        let currentIdx = 0, score = 0, timeLeft = 10 * 60, timerInterval;
+        let studentAnswers = new Array(quizData.length).fill(null);
+        let studentName = "", studentClass = "";
+
+        function startQuiz() {
+            studentName = document.getElementById('student-name').value.trim();
+            studentClass = document.getElementById('student-class').value.trim();
+
+            if (!studentName || !studentClass) {
+                const btn = event.currentTarget;
+                btn.classList.add('animate__animated', 'animate__headShake', 'bg-red-600');
+                setTimeout(() => btn.classList.remove('animate__animated', 'animate__headShake', 'bg-red-600'), 1000);
+                return;
+            }
+
+            audioCtx.resume();
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            loadQuestion();
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                let m = Math.floor(timeLeft / 60), s = timeLeft % 60;
+                document.getElementById('timer').innerText = `${m}:${s < 10 ? '0' + s : s}`;
+                if (timeLeft <= 30) document.getElementById('timer-box').classList.add('animate-pulse-soft', 'border-amber-500', 'text-amber-400');
+                if (timeLeft <= 0) endQuiz();
+            }, 1000);
+        }
+
+        function loadQuestion() {
+            const data = quizData[currentIdx];
+            const container = document.getElementById('question-container');
+            container.classList.remove('animate__fadeInRight');
+            void container.offsetWidth; container.classList.add('animate__fadeInRight');
+
+            document.getElementById('current-idx').innerText = currentIdx + 1;
+            document.getElementById('icon-container').innerText = data.icon;
+            document.getElementById('question-text').innerText = data.q;
+            document.getElementById('progress').style.width = `${((currentIdx) / quizData.length) * 100}%`;
+            
+            const optionsBox = document.getElementById('options');
+            optionsBox.innerHTML = '';
+            data.options.forEach((opt, i) => {
+                const btn = document.createElement('div');
+                btn.className = `option-card p-6 rounded-3xl flex items-center group ${studentAnswers[currentIdx] === i ? 'option-selected' : ''}`;
+                btn.innerHTML = `<div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mr-5 font-bold text-white shadow-inner border border-white/5 group-hover:bg-indigo-500">${String.fromCharCode(65 + i)}</div><div class="flex-1 text-slate-300 font-medium group-hover:text-white">${opt}</div>`;
+                btn.onclick = () => { playSound('select'); studentAnswers[currentIdx] = i; loadQuestion(); };
+                optionsBox.appendChild(btn);
+            });
+            document.getElementById('prev-btn').classList.toggle('opacity-0', currentIdx === 0);
+            document.getElementById('prev-btn').classList.toggle('pointer-events-none', currentIdx === 0);
+            document.getElementById('next-btn').innerHTML = currentIdx === quizData.length - 1 ? 'NỘP BÀI <i class="fas fa-check-circle ml-2"></i>' : 'TIẾP THEO <i class="fas fa-arrow-right ml-2"></i>';
+            document.getElementById('next-btn').disabled = studentAnswers[currentIdx] === null;
+        }
+
+        function goToNext() { if (currentIdx < quizData.length - 1) { currentIdx++; loadQuestion(); } else { endQuiz(); } }
+        function goToPrev() { if (currentIdx > 0) { currentIdx--; loadQuestion(); } }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            playSound('finish');
+            score = studentAnswers.reduce((acc, ans, i) => acc + (ans === quizData[i].correct ? 1 : 0), 0);
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            
+            document.getElementById('display-name').innerText = studentName.toUpperCase();
+            document.getElementById('display-class').innerText = `Lớp: ${studentClass}`;
+            
+            const circle = document.getElementById('score-circle');
+            const offset = 534 - (534 * (score / 10));
+            setTimeout(() => {
+                circle.style.strokeDashoffset = offset;
+                document.getElementById('score-val').innerText = `${score}/10`;
+            }, 500);
+            
+            const msgs = ["Thật tuyệt vời! Chúc mừng chuyên gia pháp luật.", "Kết quả rất tốt! Bạn đã nắm vững kiến thức.", "Hoàn thành! Kết quả ở mức khá.", "Cần dành thêm thời gian ôn tập nhé!"];
+            document.getElementById('performance-msg').innerText = score >= 9 ? msgs[0] : score >= 7 ? msgs[1] : score >= 5 ? msgs[2] : msgs[3];
+        }
+    </script>
+</body>
+</html>
